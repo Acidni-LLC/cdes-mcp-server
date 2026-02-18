@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.terprint.com/cdes/v1/terpene-profile.json",
+  "title": "CDES Terpene Profile",
+  "description": "Cannabis Data Exchange Standard - Terpene Profile (measured terpene composition)",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "https://schemas.terprint.com/cdes/v1/terpene-profile.json"
+    },
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this profile measurement"
+    },
+    "sourceType": {
+      "type": "string",
+      "enum": ["coa", "lab-direct", "manufacturer", "estimated"],
+      "description": "Source of the terpene data"
+    },
+    "sourceReference": {
+      "type": "string",
+      "description": "Reference to source document (COA ID, lab report number, etc.)"
+    },
+    "measurementDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the measurement was taken (ISO 8601)"
+    },
+    "measurementMethod": {
+      "type": "string",
+      "enum": ["gc-ms", "gc-fid", "hplc", "unknown"],
+      "description": "Analytical method used for measurement"
+    },
+    "unit": {
+      "type": "string",
+      "enum": ["percent", "mg-per-g", "ppm"],
+      "default": "percent",
+      "description": "Unit of measurement for terpene values"
+    },
+    "terpenes": {
+      "type": "object",
+      "description": "Terpene measurements",
+      "properties": {
+        "myrcene": { "$ref": "#/$defs/terpeneValue" },
+        "limonene": { "$ref": "#/$defs/terpeneValue" },
+        "betaCaryophyllene": { "$ref": "#/$defs/terpeneValue" },
+        "alphaPinene": { "$ref": "#/$defs/terpeneValue" },
+        "betaPinene": { "$ref": "#/$defs/terpeneValue" },
+        "linalool": { "$ref": "#/$defs/terpeneValue" },
+        "humulene": { "$ref": "#/$defs/terpeneValue" },
+        "terpinolene": { "$ref": "#/$defs/terpeneValue" },
+        "ocimene": { "$ref": "#/$defs/terpeneValue" },
+        "bisabolol": { "$ref": "#/$defs/terpeneValue" },
+        "camphene": { "$ref": "#/$defs/terpeneValue" },
+        "carene": { "$ref": "#/$defs/terpeneValue" },
+        "caryophylleneOxide": { "$ref": "#/$defs/terpeneValue" },
+        "eucalyptol": { "$ref": "#/$defs/terpeneValue" },
+        "fenchol": { "$ref": "#/$defs/terpeneValue" },
+        "geraniol": { "$ref": "#/$defs/terpeneValue" },
+        "guaiol": { "$ref": "#/$defs/terpeneValue" },
+        "isopulegol": { "$ref": "#/$defs/terpeneValue" },
+        "nerolidol": { "$ref": "#/$defs/terpeneValue" },
+        "terpineol": { "$ref": "#/$defs/terpeneValue" },
+        "valencene": { "$ref": "#/$defs/terpeneValue" }
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/terpeneValue",
+        "description": "Additional terpenes not in the standard list"
+      }
+    },
+    "totalTerpenes": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Total terpene content (sum of all measured terpenes)"
+    },
+    "dominantTerpene": {
+      "type": "string",
+      "description": "The terpene with highest concentration"
+    },
+    "topThreeTerpenes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "maxItems": 3,
+      "description": "The three terpenes with highest concentrations"
+    }
+  },
+  "required": ["terpenes"],
+  "$defs": {
+    "terpeneValue": {
+      "oneOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "description": "Simple numeric value"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Measured value"
+            },
+            "loq": {
+              "type": "number",
+              "description": "Limit of Quantitation"
+            },
+            "lod": {
+              "type": "number",
+              "description": "Limit of Detection"
+            },
+            "belowLoq": {
+              "type": "boolean",
+              "description": "True if detected but below quantitation limit"
+            },
+            "notDetected": {
+              "type": "boolean",
+              "description": "True if not detected (below LOD)"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

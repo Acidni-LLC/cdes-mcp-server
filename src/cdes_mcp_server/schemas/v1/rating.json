@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.terprint.com/cdes/v1/rating.json",
+  "title": "CDES Rating",
+  "description": "Cannabis Data Exchange Standard - User Rating (CX Extension)",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "https://schemas.terprint.com/cdes/v1/rating.json"
+    },
+    "ratingId": {
+      "type": "string",
+      "description": "Unique identifier for this rating"
+    },
+    "userId": {
+      "type": "string",
+      "description": "Anonymous or authenticated user identifier"
+    },
+    "subjectType": {
+      "type": "string",
+      "enum": ["strain", "batch", "product", "dispensary"],
+      "description": "Type of entity being rated"
+    },
+    "subjectId": {
+      "type": "string",
+      "description": "Identifier of the entity being rated"
+    },
+    "score": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Rating score (1-5 stars)"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Optional rating title/headline"
+    },
+    "review": {
+      "type": "string",
+      "maxLength": 5000,
+      "description": "Optional written review text"
+    },
+    "tags": {
+      "type": "array",
+      "description": "User-applied experience tags",
+      "items": {
+        "type": "string",
+        "enum": [
+          "smooth", "harsh", "potent", "mild",
+          "good-flavor", "bad-flavor", "would-recommend"
+        ]
+      }
+    },
+    "effects": {
+      "type": "array",
+      "description": "Effects experienced by the user",
+      "items": {
+        "type": "object",
+        "properties": {
+          "effect": {
+            "type": "string",
+            "enum": [
+              "relaxed", "happy", "euphoric", "uplifted", "creative",
+              "focused", "energetic", "sleepy", "hungry", "talkative",
+              "tingly", "giggly", "pain-relief", "stress-relief",
+              "anxiety-relief", "nausea-relief"
+            ]
+          },
+          "intensity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          }
+        },
+        "required": ["effect"]
+      }
+    },
+    "consumption": {
+      "type": "object",
+      "description": "How the product was consumed",
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": ["smoke", "vape", "edible", "tincture", "topical", "dab", "other"]
+        },
+        "quantity": { "type": "string" },
+        "setting": { "type": "string" }
+      }
+    },
+    "isFavorite": {
+      "type": "boolean",
+      "description": "Whether user marked this as a favorite",
+      "default": false
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": ["ratingId", "userId", "subjectType", "subjectId", "score"],
+  "additionalProperties": false
+}

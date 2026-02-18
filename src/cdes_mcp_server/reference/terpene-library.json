@@ -1,0 +1,214 @@
+{
+  "$schema": "https://schemas.terprint.com/cdes/v1/reference/terpene-library.json",
+  "version": "1.0.0",
+  "license": "CC0-1.0",
+  "description": "CDES Reference Data - Common Cannabis Terpenes Library",
+  "terpenes": [
+    {
+      "id": "terpene:myrcene",
+      "name": "Myrcene",
+      "casNumber": "123-35-3",
+      "pubchemId": 31253,
+      "molecularFormula": "C10H16",
+      "molecularWeight": 136.23,
+      "category": "monoterpene",
+      "boilingPoint": { "value": 168, "unit": "celsius" },
+      "aroma": ["earthy", "musky", "herbal", "fruity"],
+      "flavor": ["mango", "earthy", "herbal"],
+      "naturalSources": ["mango", "hops", "lemongrass", "thyme", "bay leaves"],
+      "effects": [
+        { "effect": "relaxing", "strength": "strong", "evidenceLevel": "preliminary" },
+        { "effect": "sedating", "strength": "moderate", "evidenceLevel": "preliminary" },
+        { "effect": "anti-inflammatory", "strength": "moderate", "evidenceLevel": "clinical" },
+        { "effect": "pain-relief", "strength": "moderate", "evidenceLevel": "preliminary" }
+      ],
+      "prevalence": "Most common terpene in cannabis, present in ~40% of strains as dominant terpene",
+      "typicalRange": { "min": 0.1, "max": 3.0, "unit": "percent" },
+      "notes": "May enhance THC absorption through the blood-brain barrier (entourage effect)"
+    },
+    {
+      "id": "terpene:limonene",
+      "name": "Limonene",
+      "casNumber": "138-86-3",
+      "pubchemId": 22311,
+      "molecularFormula": "C10H16",
+      "molecularWeight": 136.23,
+      "category": "monoterpene",
+      "boilingPoint": { "value": 176, "unit": "celsius" },
+      "aroma": ["citrus", "lemon", "orange"],
+      "flavor": ["citrus", "lemon", "sweet"],
+      "naturalSources": ["citrus rinds", "juniper", "peppermint", "rosemary"],
+      "effects": [
+        { "effect": "uplifting", "strength": "strong", "evidenceLevel": "preliminary" },
+        { "effect": "anti-anxiety", "strength": "moderate", "evidenceLevel": "clinical" },
+        { "effect": "anti-inflammatory", "strength": "moderate", "evidenceLevel": "clinical" }
+      ],
+      "prevalence": "Second most common terpene in cannabis",
+      "typicalRange": { "min": 0.1, "max": 2.5, "unit": "percent" },
+      "notes": "Well-studied for anxiolytic and antidepressant properties"
+    },
+    {
+      "id": "terpene:beta-caryophyllene",
+      "name": "Beta-Caryophyllene",
+      "casNumber": "87-44-5",
+      "pubchemId": 5281515,
+      "molecularFormula": "C15H24",
+      "molecularWeight": 204.35,
+      "category": "sesquiterpene",
+      "boilingPoint": { "value": 130, "unit": "celsius" },
+      "aroma": ["spicy", "peppery", "woody"],
+      "flavor": ["spicy", "peppery", "clove"],
+      "naturalSources": ["black pepper", "cloves", "cinnamon", "oregano", "basil"],
+      "effects": [
+        { "effect": "anti-inflammatory", "strength": "strong", "evidenceLevel": "clinical" },
+        { "effect": "pain-relief", "strength": "strong", "evidenceLevel": "clinical" },
+        { "effect": "anti-anxiety", "strength": "moderate", "evidenceLevel": "preliminary" }
+      ],
+      "prevalence": "Third most common terpene, often second or third dominant",
+      "typicalRange": { "min": 0.05, "max": 1.5, "unit": "percent" },
+      "notes": "Only terpene known to directly activate CB2 cannabinoid receptors; FDA-approved as food additive (GRAS)"
+    },
+    {
+      "id": "terpene:linalool",
+      "name": "Linalool",
+      "casNumber": "78-70-6",
+      "pubchemId": 6549,
+      "molecularFormula": "C10H18O",
+      "molecularWeight": 154.25,
+      "category": "monoterpene",
+      "boilingPoint": { "value": 198, "unit": "celsius" },
+      "aroma": ["floral", "lavender", "sweet"],
+      "flavor": ["floral", "lavender", "citrus"],
+      "naturalSources": ["lavender", "birch bark", "rosewood", "coriander"],
+      "effects": [
+        { "effect": "calming", "strength": "strong", "evidenceLevel": "clinical" },
+        { "effect": "sedating", "strength": "moderate", "evidenceLevel": "preliminary" },
+        { "effect": "anti-anxiety", "strength": "strong", "evidenceLevel": "clinical" }
+      ],
+      "prevalence": "Common in indica-leaning strains",
+      "typicalRange": { "min": 0.05, "max": 1.0, "unit": "percent" },
+      "notes": "Extensively used in aromatherapy; shown to reduce stress markers in clinical studies"
+    },
+    {
+      "id": "terpene:alpha-pinene",
+      "name": "Alpha-Pinene",
+      "casNumber": "80-56-8",
+      "pubchemId": 6654,
+      "molecularFormula": "C10H16",
+      "molecularWeight": 136.23,
+      "category": "monoterpene",
+      "boilingPoint": { "value": 155, "unit": "celsius" },
+      "aroma": ["pine", "woody", "earthy"],
+      "flavor": ["pine", "herbal"],
+      "naturalSources": ["pine needles", "rosemary", "basil", "dill", "parsley"],
+      "effects": [
+        { "effect": "focus", "strength": "moderate", "evidenceLevel": "preliminary" },
+        { "effect": "anti-inflammatory", "strength": "moderate", "evidenceLevel": "clinical" }
+      ],
+      "prevalence": "Most abundant terpene in nature; common in sativa-leaning strains",
+      "typicalRange": { "min": 0.05, "max": 1.0, "unit": "percent" },
+      "notes": "May help counteract short-term memory impairment associated with THC"
+    },
+    {
+      "id": "terpene:beta-pinene",
+      "name": "Beta-Pinene",
+      "casNumber": "127-91-3",
+      "pubchemId": 14896,
+      "molecularFormula": "C10H16",
+      "molecularWeight": 136.23,
+      "category": "monoterpene",
+      "boilingPoint": { "value": 166, "unit": "celsius" },
+      "aroma": ["pine", "woody", "herbal"],
+      "flavor": ["pine", "mint", "herbal"],
+      "naturalSources": ["pine needles", "basil", "dill", "parsley", "hops"],
+      "effects": [
+        { "effect": "focus", "strength": "moderate", "evidenceLevel": "preliminary" },
+        { "effect": "anti-inflammatory", "strength": "moderate", "evidenceLevel": "preliminary" }
+      ],
+      "prevalence": "Often co-occurs with alpha-pinene",
+      "typicalRange": { "min": 0.02, "max": 0.5, "unit": "percent" },
+      "notes": "Isomer of alpha-pinene with similar but subtly different effects"
+    },
+    {
+      "id": "terpene:terpinolene",
+      "name": "Terpinolene",
+      "casNumber": "586-62-9",
+      "pubchemId": 11463,
+      "molecularFormula": "C10H16",
+      "molecularWeight": 136.23,
+      "category": "monoterpene",
+      "boilingPoint": { "value": 186, "unit": "celsius" },
+      "aroma": ["herbal", "floral", "pine", "citrus"],
+      "flavor": ["herbal", "floral", "citrus"],
+      "naturalSources": ["nutmeg", "tea tree", "conifers", "apples", "cumin"],
+      "effects": [
+        { "effect": "uplifting", "strength": "moderate", "evidenceLevel": "preliminary" },
+        { "effect": "sedating", "strength": "moderate", "evidenceLevel": "preliminary" }
+      ],
+      "prevalence": "Dominant in only ~10% of strains; Jack Herer lineage",
+      "typicalRange": { "min": 0.02, "max": 0.8, "unit": "percent" },
+      "notes": "Complex aroma profile; strains with dominant terpinolene are relatively rare"
+    },
+    {
+      "id": "terpene:humulene",
+      "name": "Humulene",
+      "casNumber": "6753-98-6",
+      "pubchemId": 5281520,
+      "molecularFormula": "C15H24",
+      "molecularWeight": 204.35,
+      "category": "sesquiterpene",
+      "boilingPoint": { "value": 198, "unit": "celsius" },
+      "aroma": ["earthy", "woody", "spicy"],
+      "flavor": ["earthy", "woody", "herbal"],
+      "naturalSources": ["hops", "coriander", "clove", "basil", "ginseng"],
+      "effects": [
+        { "effect": "anti-inflammatory", "strength": "moderate", "evidenceLevel": "clinical" },
+        { "effect": "appetite-stimulant", "strength": "moderate", "evidenceLevel": "preliminary" }
+      ],
+      "prevalence": "Common in hops; contributes to the 'hoppy' aroma of some cannabis strains",
+      "typicalRange": { "min": 0.02, "max": 0.5, "unit": "percent" },
+      "notes": "Also known as alpha-humulene; isomer of beta-caryophyllene"
+    },
+    {
+      "id": "terpene:ocimene",
+      "name": "Ocimene",
+      "casNumber": "13877-91-3",
+      "pubchemId": 5320250,
+      "molecularFormula": "C10H16",
+      "molecularWeight": 136.23,
+      "category": "monoterpene",
+      "boilingPoint": { "value": 100, "unit": "celsius" },
+      "aroma": ["sweet", "herbal", "woody"],
+      "flavor": ["sweet", "tropical", "herbal"],
+      "naturalSources": ["mint", "parsley", "pepper", "basil", "mangoes", "orchids"],
+      "effects": [
+        { "effect": "anti-inflammatory", "strength": "moderate", "evidenceLevel": "preliminary" },
+        { "effect": "anti-fungal", "strength": "moderate", "evidenceLevel": "preliminary" }
+      ],
+      "prevalence": "Less common as dominant terpene; often present in small amounts",
+      "typicalRange": { "min": 0.01, "max": 0.3, "unit": "percent" },
+      "notes": "Produced as part of the plant's defense mechanism against pests"
+    },
+    {
+      "id": "terpene:nerolidol",
+      "name": "Nerolidol",
+      "casNumber": "7212-44-4",
+      "pubchemId": 5284507,
+      "molecularFormula": "C15H26O",
+      "molecularWeight": 222.37,
+      "category": "sesquiterpene",
+      "boilingPoint": { "value": 276, "unit": "celsius" },
+      "aroma": ["floral", "woody", "citrus"],
+      "flavor": ["floral", "woody", "citrus"],
+      "naturalSources": ["neroli", "ginger", "jasmine", "tea tree", "lemongrass"],
+      "effects": [
+        { "effect": "sedating", "strength": "moderate", "evidenceLevel": "preliminary" },
+        { "effect": "anti-fungal", "strength": "moderate", "evidenceLevel": "clinical" },
+        { "effect": "anti-bacterial", "strength": "moderate", "evidenceLevel": "clinical" }
+      ],
+      "prevalence": "Rare as dominant terpene in cannabis; used as skin penetration enhancer",
+      "typicalRange": { "min": 0.01, "max": 0.2, "unit": "percent" },
+      "notes": "Used in cosmetics industry as a skin permeation enhancer; may enhance transdermal drug delivery"
+    }
+  ]
+}

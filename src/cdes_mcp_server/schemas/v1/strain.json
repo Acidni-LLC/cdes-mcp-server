@@ -1,0 +1,198 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.terprint.com/cdes/v1/strain.json",
+  "title": "CDES Strain",
+  "description": "Cannabis Data Exchange Standard - Strain Definition",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "https://schemas.terprint.com/cdes/v1/strain.json"
+    },
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this strain"
+    },
+    "name": {
+      "type": "string",
+      "description": "Primary/common name of the strain",
+      "examples": ["Gelato", "Blue Dream", "OG Kush", "Sour Diesel"]
+    },
+    "aliases": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Alternative names for this strain",
+      "examples": [["Larry Bird", "Gelato #33"], ["Azure Haze"]]
+    },
+    "type": {
+      "type": "string",
+      "enum": ["indica", "sativa", "hybrid", "cbd", "unknown", "indica-dominant", "sativa-dominant", "balanced"],
+      "description": "Strain classification"
+    },
+    "indicaPercent": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Percentage indica genetics (if known)"
+    },
+    "sativaPercent": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Percentage sativa genetics (if known)"
+    },
+    "genetics": {
+      "type": "object",
+      "description": "Genetic lineage information",
+      "properties": {
+        "parent1": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "strainId": { "type": "string", "description": "CDES strain ID if known" }
+          }
+        },
+        "parent2": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "strainId": { "type": "string", "description": "CDES strain ID if known" }
+          }
+        },
+        "breeder": {
+          "type": "string",
+          "description": "Original breeder or seed company"
+        },
+        "lineageNotes": {
+          "type": "string",
+          "description": "Additional notes about genetics or breeding history"
+        }
+      }
+    },
+    "typicalTerpeneProfile": {
+      "$ref": "https://schemas.terprint.com/cdes/v1/terpene-profile.json",
+      "description": "Typical/expected terpene profile for this strain"
+    },
+    "typicalCannabinoidProfile": {
+      "$ref": "https://schemas.terprint.com/cdes/v1/cannabinoid-profile.json",
+      "description": "Typical/expected cannabinoid profile for this strain"
+    },
+    "thcRange": {
+      "type": "object",
+      "description": "Typical THC percentage range",
+      "properties": {
+        "min": { "type": "number", "minimum": 0, "maximum": 100 },
+        "max": { "type": "number", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "cbdRange": {
+      "type": "object",
+      "description": "Typical CBD percentage range",
+      "properties": {
+        "min": { "type": "number", "minimum": 0, "maximum": 100 },
+        "max": { "type": "number", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "floweringTime": {
+      "type": "object",
+      "description": "Typical flowering time",
+      "properties": {
+        "minWeeks": { "type": "integer", "minimum": 1 },
+        "maxWeeks": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "reportedEffects": {
+      "type": "array",
+      "description": "Commonly reported effects",
+      "items": {
+        "type": "object",
+        "properties": {
+          "effect": {
+            "type": "string",
+            "enum": [
+              "relaxed", "euphoric", "happy", "uplifted", "creative",
+              "focused", "energetic", "talkative", "giggly", "hungry",
+              "sleepy", "tingly", "aroused"
+            ]
+          },
+          "frequency": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Percentage of users reporting this effect"
+          }
+        }
+      }
+    },
+    "medicalUses": {
+      "type": "array",
+      "description": "Reported medical applications",
+      "items": {
+        "type": "string",
+        "enum": [
+          "pain", "inflammation", "anxiety", "depression", "insomnia",
+          "stress", "nausea", "appetite-loss", "headaches", "muscle-spasms",
+          "ptsd", "seizures", "glaucoma", "arthritis", "fibromyalgia"
+        ]
+      }
+    },
+    "flavorProfile": {
+      "type": "array",
+      "description": "Taste and aroma descriptors",
+      "items": {
+        "type": "string",
+        "enum": [
+          "earthy", "woody", "pine", "citrus", "lemon", "orange", "grapefruit",
+          "berry", "grape", "blueberry", "strawberry", "tropical", "mango",
+          "sweet", "candy", "vanilla", "chocolate", "coffee", "nutty",
+          "spicy", "peppery", "herbal", "mint", "lavender", "floral",
+          "diesel", "chemical", "skunky", "cheese", "pungent", "hash"
+        ]
+      }
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": ["easy", "moderate", "difficult", "expert"],
+      "description": "Growing difficulty level"
+    },
+    "awards": {
+      "type": "array",
+      "description": "Cannabis cup or competition awards",
+      "items": {
+        "type": "object",
+        "properties": {
+          "competition": { "type": "string" },
+          "year": { "type": "integer" },
+          "placement": { "type": "string" },
+          "category": { "type": "string" }
+        }
+      }
+    },
+    "images": {
+      "type": "array",
+      "description": "URLs to strain images",
+      "items": {
+        "type": "object",
+        "properties": {
+          "url": { "type": "string", "format": "uri" },
+          "type": { "type": "string", "enum": ["flower", "plant", "trichome", "package"] },
+          "attribution": { "type": "string" }
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "description": "Data sources for this strain information",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "url": { "type": "string", "format": "uri" },
+          "retrievedDate": { "type": "string", "format": "date" }
+        }
+      }
+    }
+  },
+  "required": ["id", "name", "type"],
+  "additionalProperties": false
+}

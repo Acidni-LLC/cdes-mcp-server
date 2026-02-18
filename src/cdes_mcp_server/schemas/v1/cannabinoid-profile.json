@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.terprint.com/cdes/v1/cannabinoid-profile.json",
+  "title": "CDES Cannabinoid Profile",
+  "description": "Cannabis Data Exchange Standard - Cannabinoid Profile (measured cannabinoid composition)",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this profile measurement"
+    },
+    "sourceType": {
+      "type": "string",
+      "enum": ["coa", "lab-direct", "manufacturer", "estimated"],
+      "description": "Source of the cannabinoid data"
+    },
+    "sourceReference": {
+      "type": "string",
+      "description": "Reference to source document (COA ID, lab report number)"
+    },
+    "measurementDate": {
+      "type": "string",
+      "format": "date"
+    },
+    "unit": {
+      "type": "string",
+      "enum": ["percent", "mg-per-g", "mg-per-ml"],
+      "default": "percent"
+    },
+    "cannabinoids": {
+      "type": "object",
+      "properties": {
+        "thca": { "type": "number", "minimum": 0 },
+        "thc": { "type": "number", "minimum": 0 },
+        "delta8Thc": { "type": "number", "minimum": 0 },
+        "delta9Thc": { "type": "number", "minimum": 0 },
+        "thcv": { "type": "number", "minimum": 0 },
+        "cbda": { "type": "number", "minimum": 0 },
+        "cbd": { "type": "number", "minimum": 0 },
+        "cbdv": { "type": "number", "minimum": 0 },
+        "cbg": { "type": "number", "minimum": 0 },
+        "cbga": { "type": "number", "minimum": 0 },
+        "cbn": { "type": "number", "minimum": 0 },
+        "cbc": { "type": "number", "minimum": 0 },
+        "cbca": { "type": "number", "minimum": 0 }
+      }
+    },
+    "totalThc": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Total THC (THCA * 0.877 + THC)"
+    },
+    "totalCbd": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Total CBD (CBDA * 0.877 + CBD)"
+    },
+    "totalCannabinoids": {
+      "type": "number",
+      "minimum": 0
+    }
+  },
+  "required": ["cannabinoids"]
+}

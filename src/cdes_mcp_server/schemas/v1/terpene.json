@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.terprint.com/cdes/v1/terpene.json",
+  "title": "CDES Terpene",
+  "description": "Cannabis Data Exchange Standard - Terpene Definition",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "https://schemas.terprint.com/cdes/v1/terpene.json"
+    },
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this terpene in the CDES vocabulary",
+      "pattern": "^terpene:[a-z-]+$",
+      "examples": ["terpene:myrcene", "terpene:limonene", "terpene:beta-caryophyllene"]
+    },
+    "name": {
+      "type": "string",
+      "description": "Common name of the terpene",
+      "examples": ["Myrcene", "Limonene", "Beta-Caryophyllene"]
+    },
+    "iupacName": {
+      "type": "string",
+      "description": "IUPAC systematic name",
+      "examples": ["7-Methyl-3-methylene-1,6-octadiene"]
+    },
+    "casNumber": {
+      "type": "string",
+      "description": "Chemical Abstracts Service registry number",
+      "pattern": "^[0-9]+-[0-9]+-[0-9]+$",
+      "examples": ["123-35-3", "138-86-3", "87-44-5"]
+    },
+    "molecularFormula": {
+      "type": "string",
+      "description": "Molecular formula",
+      "examples": ["C10H16", "C15H24"]
+    },
+    "molecularWeight": {
+      "type": "number",
+      "description": "Molecular weight in g/mol",
+      "minimum": 0,
+      "examples": [136.24, 204.35]
+    },
+    "boilingPoint": {
+      "type": "object",
+      "description": "Boiling point information",
+      "properties": {
+        "value": { "type": "number" },
+        "unit": { "type": "string", "enum": ["celsius", "fahrenheit", "kelvin"], "default": "celsius" }
+      },
+      "required": ["value"]
+    },
+    "aroma": {
+      "type": "array",
+      "description": "Aroma descriptors",
+      "items": {
+        "type": "string",
+        "enum": [
+          "earthy", "musky", "herbal", "citrus", "lemon", "orange", "grapefruit",
+          "pine", "woody", "spicy", "peppery", "floral", "lavender", "sweet",
+          "tropical", "mango", "berry", "skunky", "diesel", "chemical", "mint"
+        ]
+      }
+    },
+    "effects": {
+      "type": "array",
+      "description": "Reported effects associated with this terpene",
+      "items": {
+        "type": "object",
+        "properties": {
+          "effect": {
+            "type": "string",
+            "enum": [
+              "relaxing", "sedating", "calming", "anti-anxiety",
+              "uplifting", "energizing", "focus", "creativity",
+              "pain-relief", "anti-inflammatory", "appetite-stimulant",
+              "nausea-relief", "anti-bacterial", "anti-fungal"
+            ]
+          },
+          "strength": {
+            "type": "string",
+            "enum": ["weak", "moderate", "strong"],
+            "description": "Relative strength of effect"
+          },
+          "evidenceLevel": {
+            "type": "string",
+            "enum": ["anecdotal", "preliminary", "clinical", "established"],
+            "description": "Level of scientific evidence"
+          }
+        },
+        "required": ["effect"]
+      }
+    },
+    "naturalSources": {
+      "type": "array",
+      "description": "Non-cannabis plants where this terpene is commonly found",
+      "items": { "type": "string" }
+    },
+    "synonyms": {
+      "type": "array",
+      "description": "Alternative names for this terpene",
+      "items": { "type": "string" }
+    },
+    "isMonoterpene": {
+      "type": "boolean",
+      "description": "True if this is a monoterpene (C10H16)"
+    },
+    "isSesquiterpene": {
+      "type": "boolean",
+      "description": "True if this is a sesquiterpene (C15H24)"
+    }
+  },
+  "required": ["id", "name", "casNumber"],
+  "additionalProperties": false
+}

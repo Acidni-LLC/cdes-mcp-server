@@ -1,0 +1,116 @@
+{
+  "$schema": "https://schemas.terprint.com/cdes/v1/reference/cannabinoid-library.json",
+  "version": "1.0.0",
+  "license": "CC0-1.0",
+  "description": "CDES Reference Data - Cannabis Cannabinoid Library",
+  "cannabinoids": [
+    {
+      "id": "cannabinoid:thc",
+      "name": "THC",
+      "fullName": "Delta-9-Tetrahydrocannabinol",
+      "casNumber": "1972-08-3",
+      "molecularFormula": "C21H30O2",
+      "category": "phytocannabinoid",
+      "psychoactive": true,
+      "color": { "hex": "#2ecc40", "rgb": { "r": 46, "g": 204, "b": 64 } },
+      "effects": ["euphoria", "relaxation", "pain-relief", "appetite-stimulation"],
+      "description": "Primary psychoactive compound in cannabis"
+    },
+    {
+      "id": "cannabinoid:thca",
+      "name": "THCA",
+      "fullName": "Tetrahydrocannabinolic Acid",
+      "casNumber": "23978-85-0",
+      "molecularFormula": "C22H30O4",
+      "category": "phytocannabinoid",
+      "psychoactive": false,
+      "color": { "hex": "#27ae60", "rgb": { "r": 39, "g": 174, "b": 96 } },
+      "effects": ["anti-inflammatory", "neuroprotective", "anti-nausea"],
+      "description": "Acidic precursor to THC; decarboxylates to THC with heat"
+    },
+    {
+      "id": "cannabinoid:cbd",
+      "name": "CBD",
+      "fullName": "Cannabidiol",
+      "casNumber": "13956-29-1",
+      "molecularFormula": "C21H30O2",
+      "category": "phytocannabinoid",
+      "psychoactive": false,
+      "color": { "hex": "#3498db", "rgb": { "r": 52, "g": 152, "b": 219 } },
+      "effects": ["anti-anxiety", "anti-inflammatory", "anti-seizure", "pain-relief"],
+      "description": "Most abundant non-psychoactive cannabinoid; FDA-approved for epilepsy (Epidiolex)"
+    },
+    {
+      "id": "cannabinoid:cbda",
+      "name": "CBDA",
+      "fullName": "Cannabidiolic Acid",
+      "casNumber": "1244-58-2",
+      "molecularFormula": "C22H30O4",
+      "category": "phytocannabinoid",
+      "psychoactive": false,
+      "color": { "hex": "#2980b9", "rgb": { "r": 41, "g": 128, "b": 185 } },
+      "effects": ["anti-nausea", "anti-inflammatory"],
+      "description": "Acidic precursor to CBD; shows promise for nausea treatment"
+    },
+    {
+      "id": "cannabinoid:cbg",
+      "name": "CBG",
+      "fullName": "Cannabigerol",
+      "casNumber": "25654-31-3",
+      "molecularFormula": "C21H32O2",
+      "category": "phytocannabinoid",
+      "psychoactive": false,
+      "color": { "hex": "#e67e22", "rgb": { "r": 230, "g": 126, "b": 34 } },
+      "effects": ["anti-inflammatory", "anti-bacterial", "appetite-stimulation"],
+      "description": "The 'mother cannabinoid' from which other cannabinoids are synthesized"
+    },
+    {
+      "id": "cannabinoid:cbn",
+      "name": "CBN",
+      "fullName": "Cannabinol",
+      "casNumber": "521-35-7",
+      "molecularFormula": "C21H26O2",
+      "category": "phytocannabinoid",
+      "psychoactive": false,
+      "color": { "hex": "#9b59b6", "rgb": { "r": 155, "g": 89, "b": 182 } },
+      "effects": ["sedation", "anti-insomnia"],
+      "description": "Oxidation product of THC; associated with sedation and aged cannabis"
+    },
+    {
+      "id": "cannabinoid:cbc",
+      "name": "CBC",
+      "fullName": "Cannabichromene",
+      "casNumber": "20675-51-8",
+      "molecularFormula": "C21H30O2",
+      "category": "phytocannabinoid",
+      "psychoactive": false,
+      "color": { "hex": "#1abc9c", "rgb": { "r": 26, "g": 188, "b": 156 } },
+      "effects": ["anti-inflammatory", "antidepressant", "anti-fungal"],
+      "description": "Third most common cannabinoid; may contribute to the entourage effect"
+    },
+    {
+      "id": "cannabinoid:thcv",
+      "name": "THCV",
+      "fullName": "Tetrahydrocannabivarin",
+      "casNumber": "31262-37-0",
+      "molecularFormula": "C19H26O2",
+      "category": "phytocannabinoid",
+      "psychoactive": true,
+      "color": { "hex": "#f39c12", "rgb": { "r": 243, "g": 156, "b": 18 } },
+      "effects": ["appetite-suppression", "energizing", "focus"],
+      "description": "Propyl analog of THC; shorter duration of action, appetite-suppressing properties"
+    },
+    {
+      "id": "cannabinoid:delta8-thc",
+      "name": "Delta-8 THC",
+      "fullName": "Delta-8-Tetrahydrocannabinol",
+      "casNumber": "5957-75-5",
+      "molecularFormula": "C21H30O2",
+      "category": "phytocannabinoid",
+      "psychoactive": true,
+      "color": { "hex": "#e74c3c", "rgb": { "r": 231, "g": 76, "b": 60 } },
+      "effects": ["mild-euphoria", "relaxation", "anti-nausea"],
+      "description": "Isomer of delta-9 THC; approximately 50-75% as potent; regulatory status varies by state"
+    }
+  ]
+}

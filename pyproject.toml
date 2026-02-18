@@ -1,0 +1,54 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "cdes-mcp-server"
+version = "1.0.0"
+description = "Public MCP server exposing CDES (Cannabis Data Exchange Standard) schemas, reference data, and validation tools"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.12"
+authors = [
+    { name = "Acidni LLC", email = "engineering@acidni.net" },
+]
+keywords = ["cdes", "cannabis", "mcp", "json-schema", "terpenes", "cannabinoids"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Software Development :: Libraries",
+]
+
+dependencies = [
+    "mcp>=1.0.0",
+    "jsonschema>=4.20.0",
+]
+
+[project.urls]
+Homepage = "https://cdes.world"
+Repository = "https://github.com/Acidni-LLC/cdes-mcp-server"
+Documentation = "https://github.com/Acidni-LLC/cdes-mcp-server#readme"
+"Bug Tracker" = "https://github.com/Acidni-LLC/cdes-mcp-server/issues"
+Specification = "https://github.com/Acidni-LLC/cdes-spec"
+
+[project.scripts]
+cdes-mcp-server = "cdes_mcp_server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/cdes_mcp_server"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "ANN", "S", "B", "A", "COM", "C4", "DTZ", "ISC", "ICN", "PIE", "PT", "RSE", "RET", "SIM", "TID", "TCH", "ARG", "PLE", "PLR", "PLW", "TRY", "FLY", "PERF", "RUF"]
+ignore = ["ANN101", "ANN102", "ANN401", "TRY003", "COM812", "ISC001"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

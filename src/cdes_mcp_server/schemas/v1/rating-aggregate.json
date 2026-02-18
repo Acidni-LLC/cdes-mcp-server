@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.terprint.com/cdes/v1/rating-aggregate.json",
+  "title": "CDES Rating Aggregate",
+  "description": "Cannabis Data Exchange Standard - Aggregated Rating Statistics",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "https://schemas.terprint.com/cdes/v1/rating-aggregate.json"
+    },
+    "subjectType": {
+      "type": "string",
+      "enum": ["strain", "batch", "product", "dispensary"],
+      "description": "Type of entity being rated"
+    },
+    "subjectId": {
+      "type": "string",
+      "description": "Identifier of the rated entity"
+    },
+    "averageScore": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Average rating score"
+    },
+    "totalRatings": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of ratings received"
+    },
+    "distribution": {
+      "type": "object",
+      "description": "Rating score distribution",
+      "properties": {
+        "1": { "type": "integer", "minimum": 0 },
+        "2": { "type": "integer", "minimum": 0 },
+        "3": { "type": "integer", "minimum": 0 },
+        "4": { "type": "integer", "minimum": 0 },
+        "5": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "topTags": {
+      "type": "array",
+      "description": "Most frequently applied tags",
+      "items": {
+        "type": "object",
+        "properties": {
+          "tag": { "type": "string" },
+          "count": { "type": "integer", "minimum": 0 },
+          "percentage": { "type": "number", "minimum": 0, "maximum": 100 }
+        },
+        "required": ["tag", "count"]
+      }
+    },
+    "topEffects": {
+      "type": "array",
+      "description": "Most commonly reported effects",
+      "items": {
+        "type": "object",
+        "properties": {
+          "effect": { "type": "string" },
+          "count": { "type": "integer", "minimum": 0 },
+          "averageIntensity": { "type": "number", "minimum": 1, "maximum": 5 }
+        },
+        "required": ["effect", "count"]
+      }
+    },
+    "totalFavorites": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of times marked as favorite"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": ["subjectType", "subjectId", "averageScore", "totalRatings"],
+  "additionalProperties": false
+}

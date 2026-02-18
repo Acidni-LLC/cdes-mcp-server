@@ -29,6 +29,12 @@ dependencies = [
     "jsonschema>=4.20.0",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "ruff>=0.4.0",
+]
+
 [project.urls]
 Homepage = "https://cdes.world"
 Repository = "https://github.com/Acidni-LLC/cdes-mcp-server"

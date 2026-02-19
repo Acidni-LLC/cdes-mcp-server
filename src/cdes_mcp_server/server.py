@@ -91,6 +91,7 @@ def _all_reference_names() -> list[str]:
 # MCP Resources — schemas
 # ---------------------------------------------------------------------------
 
+
 @mcp.resource("cdes://schemas/v1/{name}")
 def schema_resource(name: str) -> str:
     """Return a CDES v1 JSON schema as a resource.
@@ -116,6 +117,7 @@ def reference_resource(name: str) -> str:
 # MCP Tools
 # ---------------------------------------------------------------------------
 
+
 @mcp.tool()
 def list_schemas() -> str:
     """List all available CDES v1 schemas with their titles and descriptions.
@@ -126,14 +128,16 @@ def list_schemas() -> str:
     result = []
     for name in _all_schema_names():
         schema = _get_schema(name)
-        result.append({
-            "name": name,
-            "title": schema.get("title", name),
-            "description": schema.get("description", ""),
-            "schemaId": schema.get("$id", ""),
-            "required": schema.get("required", []),
-            "propertyCount": len(schema.get("properties", {})),
-        })
+        result.append(
+            {
+                "name": name,
+                "title": schema.get("title", name),
+                "description": schema.get("description", ""),
+                "schemaId": schema.get("$id", ""),
+                "required": schema.get("required", []),
+                "propertyCount": len(schema.get("properties", {})),
+            }
+        )
     return json.dumps(result, indent=2)
 
 
@@ -169,9 +173,7 @@ def validate_data(schema_name: str, data: dict[str, Any]) -> str:
     for sn in _all_schema_names():
         s = _get_schema(sn)
         if "$id" in s:
-            resources.append(
-                (s["$id"], referencing.Resource.from_contents(s))
-            )
+            resources.append((s["$id"], referencing.Resource.from_contents(s)))
     registry = referencing.Registry().with_resources(resources)
 
     validator = jsonschema.Draft202012Validator(schema, registry=registry)
@@ -180,18 +182,23 @@ def validate_data(schema_name: str, data: dict[str, Any]) -> str:
     error_messages = []
     for err in errors:
         path = ".".join(str(p) for p in err.absolute_path) or "(root)"
-        error_messages.append({
-            "path": path,
-            "message": err.message,
-            "schemaPath": ".".join(str(p) for p in err.absolute_schema_path),
-        })
+        error_messages.append(
+            {
+                "path": path,
+                "message": err.message,
+                "schemaPath": ".".join(str(p) for p in err.absolute_schema_path),
+            }
+        )
 
-    return json.dumps({
-        "valid": len(error_messages) == 0,
-        "schemaName": schema_name,
-        "errorCount": len(error_messages),
-        "errors": error_messages,
-    }, indent=2)
+    return json.dumps(
+        {
+            "valid": len(error_messages) == 0,
+            "schemaName": schema_name,
+            "errorCount": len(error_messages),
+            "errors": error_messages,
+        },
+        indent=2,
+    )
 
 
 @mcp.tool()
@@ -215,10 +222,13 @@ def get_terpene_info(terpene_id: str | None = None, name: str | None = None) -> 
             return json.dumps(t, indent=2)
 
     available = [t["name"] for t in lib.get("terpenes", [])]
-    return json.dumps({
-        "error": f"Terpene not found. Search: id={terpene_id}, name={name}",
-        "available": available,
-    }, indent=2)
+    return json.dumps(
+        {
+            "error": f"Terpene not found. Search: id={terpene_id}, name={name}",
+            "available": available,
+        },
+        indent=2,
+    )
 
 
 @mcp.tool()
@@ -240,17 +250,17 @@ def get_cannabinoid_info(
     for c in lib.get("cannabinoids", []):
         if cannabinoid_id and c.get("id") == cannabinoid_id:
             return json.dumps(c, indent=2)
-        if name and (
-            c.get("name", "").lower() == name.lower()
-            or c.get("fullName", "").lower() == name.lower()
-        ):
+        if name and (c.get("name", "").lower() == name.lower() or c.get("fullName", "").lower() == name.lower()):
             return json.dumps(c, indent=2)
 
     available = [f"{c['name']} ({c.get('fullName', '')})" for c in lib.get("cannabinoids", [])]
-    return json.dumps({
-        "error": f"Cannabinoid not found. Search: id={cannabinoid_id}, name={name}",
-        "available": available,
-    }, indent=2)
+    return json.dumps(
+        {
+            "error": f"Cannabinoid not found. Search: id={cannabinoid_id}, name={name}",
+            "available": available,
+        },
+        indent=2,
+    )
 
 
 @mcp.tool()
@@ -269,10 +279,13 @@ def lookup_terpene_color(terpene_name: str) -> str:
             return json.dumps(entry, indent=2)
 
     available = [c["terpene"] for c in colors.get("colors", [])]
-    return json.dumps({
-        "error": f"Terpene color not found: {terpene_name}",
-        "available": available,
-    }, indent=2)
+    return json.dumps(
+        {
+            "error": f"Terpene color not found: {terpene_name}",
+            "available": available,
+        },
+        indent=2,
+    )
 
 
 @mcp.tool()
@@ -283,16 +296,17 @@ def list_terpenes() -> str:
     point for each terpene.
     """
     lib = _get_reference("terpene-library")
-    result = []
-    for t in lib.get("terpenes", []):
-        result.append({
+    result = [
+        {
             "id": t.get("id"),
             "name": t.get("name"),
             "casNumber": t.get("casNumber"),
             "category": t.get("category"),
             "aroma": t.get("aroma", []),
             "boilingPoint": t.get("boilingPoint"),
-        })
+        }
+        for t in lib.get("terpenes", [])
+    ]
     return json.dumps(result, indent=2)
 
 
@@ -304,16 +318,17 @@ def list_cannabinoids() -> str:
     and primary effects for each cannabinoid.
     """
     lib = _get_reference("cannabinoid-library")
-    result = []
-    for c in lib.get("cannabinoids", []):
-        result.append({
+    result = [
+        {
             "id": c.get("id"),
             "name": c.get("name"),
             "fullName": c.get("fullName"),
             "psychoactive": c.get("psychoactive"),
             "color": c.get("color"),
             "effects": c.get("effects", []),
-        })
+        }
+        for c in lib.get("cannabinoids", [])
+    ]
     return json.dumps(result, indent=2)
 
 
@@ -335,30 +350,37 @@ def search_reference_data(query: str) -> str:
     for t in lib.get("terpenes", []):
         searchable = json.dumps(t).lower()
         if q in searchable:
-            results.append({
-                "type": "terpene",
-                "id": t.get("id"),
-                "name": t.get("name"),
-                "matchContext": _extract_match_context(t, q),
-            })
+            results.append(
+                {
+                    "type": "terpene",
+                    "id": t.get("id"),
+                    "name": t.get("name"),
+                    "matchContext": _extract_match_context(t, q),
+                }
+            )
 
     # Search cannabinoids
     clib = _get_reference("cannabinoid-library")
     for c in clib.get("cannabinoids", []):
         searchable = json.dumps(c).lower()
         if q in searchable:
-            results.append({
-                "type": "cannabinoid",
-                "id": c.get("id"),
-                "name": c.get("name"),
-                "matchContext": _extract_match_context(c, q),
-            })
+            results.append(
+                {
+                    "type": "cannabinoid",
+                    "id": c.get("id"),
+                    "name": c.get("name"),
+                    "matchContext": _extract_match_context(c, q),
+                }
+            )
 
-    return json.dumps({
-        "query": query,
-        "resultCount": len(results),
-        "results": results,
-    }, indent=2)
+    return json.dumps(
+        {
+            "query": query,
+            "resultCount": len(results),
+            "results": results,
+        },
+        indent=2,
+    )
 
 
 def _extract_match_context(obj: dict[str, Any], query: str) -> str:
@@ -382,55 +404,69 @@ def get_cdes_overview() -> str:
     schemas = []
     for name in _all_schema_names():
         s = _get_schema(name)
-        schemas.append({
-            "name": name,
-            "title": s.get("title", ""),
-            "description": s.get("description", ""),
-            "required": s.get("required", []),
-        })
+        schemas.append(
+            {
+                "name": name,
+                "title": s.get("title", ""),
+                "description": s.get("description", ""),
+                "required": s.get("required", []),
+            }
+        )
 
     reference_sets = []
     for name in _all_reference_names():
         r = _get_reference(name)
-        reference_sets.append({
-            "name": name,
-            "description": r.get("description", ""),
-            "version": r.get("version", ""),
-            "license": r.get("license", ""),
-        })
+        reference_sets.append(
+            {
+                "name": name,
+                "description": r.get("description", ""),
+                "version": r.get("version", ""),
+                "license": r.get("license", ""),
+            }
+        )
 
-    return json.dumps({
-        "standard": "Cannabis Data Exchange Standard (CDES)",
-        "version": "1.0.0",
-        "schemaVersion": "JSON Schema Draft 2020-12",
-        "baseUri": "https://schemas.terprint.com/cdes/v1/",
-        "website": "https://www.cdes.world",
-        "publisher": "Acidni LLC / Terprint",
-        "licenses": {
-            "code": "Apache-2.0",
-            "specifications": "CC-BY-4.0",
-            "referenceData": "CC0-1.0",
+    return json.dumps(
+        {
+            "standard": "Cannabis Data Exchange Standard (CDES)",
+            "version": "1.0.0",
+            "schemaVersion": "JSON Schema Draft 2020-12",
+            "baseUri": "https://schemas.terprint.com/cdes/v1/",
+            "website": "https://www.cdes.world",
+            "publisher": "Acidni LLC / Terprint",
+            "licenses": {
+                "code": "Apache-2.0",
+                "specifications": "CC-BY-4.0",
+                "referenceData": "CC0-1.0",
+            },
+            "schemas": schemas,
+            "referenceDataSets": reference_sets,
+            "links": {
+                "specification": "https://github.com/Acidni-LLC/cdes-spec",
+                "pythonSdk": "https://github.com/Acidni-LLC/cdes-sdk-python",
+                "referenceData": "https://github.com/Acidni-LLC/cdes-reference-data",
+                "mcpServer": "https://github.com/Acidni-LLC/cdes-mcp-server",
+            },
+            "tools": [
+                "list_schemas",
+                "get_schema",
+                "validate_data",
+                "get_terpene_info",
+                "get_cannabinoid_info",
+                "lookup_terpene_color",
+                "list_terpenes",
+                "list_cannabinoids",
+                "search_reference_data",
+                "get_cdes_overview",
+            ],
         },
-        "schemas": schemas,
-        "referenceDataSets": reference_sets,
-        "links": {
-            "specification": "https://github.com/Acidni-LLC/cdes-spec",
-            "pythonSdk": "https://github.com/Acidni-LLC/cdes-sdk-python",
-            "referenceData": "https://github.com/Acidni-LLC/cdes-reference-data",
-            "mcpServer": "https://github.com/Acidni-LLC/cdes-mcp-server",
-        },
-        "tools": [
-            "list_schemas", "get_schema", "validate_data",
-            "get_terpene_info", "get_cannabinoid_info",
-            "lookup_terpene_color", "list_terpenes", "list_cannabinoids",
-            "search_reference_data", "get_cdes_overview",
-        ],
-    }, indent=2)
+        indent=2,
+    )
 
 
 # ---------------------------------------------------------------------------
 # Entrypoint
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Run the CDES MCP server over stdio transport."""

@@ -1,11 +1,10 @@
 """CDES MCP Server - Cannabis Data Exchange Standard for AI Agents.
 
-Exposes all CDES v1 JSON schemas, reference data libraries, and validation
-tools via the Model Context Protocol (MCP). Designed for public consumption
-by AI clients such as Claude Desktop, VS Code Copilot, and other MCP-capable
-applications.
+Publicly hosted MCP server exposing all CDES v1 JSON schemas, reference data
+libraries, and validation tools.  Automatically syncs with upstream repos
+(cdes-spec, cdes-reference-data) to always serve the latest version.
 
-Transport: stdio (standard for local/public MCP servers)
+Transport: SSE (public) or stdio (local dev)
 Protocol: MCP v1.0 over JSON-RPC 2.0
 """
 
@@ -13,15 +12,55 @@ from __future__ import annotations
 
 import json
 import logging
+import os
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import httpx
 import jsonschema
 import referencing
 import referencing.jsonschema
+import uvicorn
 from mcp.server.fastmcp import FastMCP
+from mcp.server.sse import SseServerTransport
+from starlette.applications import Starlette
+from starlette.middleware import Middleware
+from starlette.middleware.cors import CORSMiddleware
+from starlette.requests import Request
+from starlette.responses import JSONResponse
+from starlette.routing import Route
 
 logger = logging.getLogger(__name__)
+
+__version__ = "1.1.0"
+
+# ---------------------------------------------------------------------------
+# GitHub sync configuration
+# ---------------------------------------------------------------------------
+
+_GITHUB_RAW_BASE = "https://raw.githubusercontent.com/Acidni-LLC"
+
+_GITHUB_SCHEMA_FILES = [
+    "strain",
+    "terpene-profile",
+    "cannabinoid-profile",
+    "terpene",
+    "coa",
+    "rating",
+    "rating-aggregate",
+]
+
+_GITHUB_REFERENCE_MAP: dict[str, tuple[str, str]] = {
+    "terpene-library": ("terpenes", "terpene-library.json"),
+    "cannabinoid-library": ("cannabinoids", "cannabinoid-library.json"),
+    "terpene-colors": ("terpenes", "terpene-colors.json"),
+    "terpene-library-extended": ("terpenes", "terpene-library-extended.json"),
+    "terpene-therapeutics": ("terpenes", "terpene-therapeutics.json"),
+    "cannabinoid-therapeutics": ("cannabinoids", "cannabinoid-therapeutics.json"),
+}
+
+_last_sync: datetime | None = None
 
 # ---------------------------------------------------------------------------
 # Server initialisation
@@ -30,9 +69,10 @@ logger = logging.getLogger(__name__)
 mcp = FastMCP(
     "cdes-mcp-server",
     instructions=(
-        "Cannabis Data Exchange Standard (CDES) MCP Server v1.0.0 — "
-        "provides access to all CDES v1 JSON schemas, reference data "
-        "(terpenes, cannabinoids, colors), and validation tools."
+        "Cannabis Data Exchange Standard (CDES) MCP Server v1.1.0 — "
+        "publicly hosted server providing access to all CDES v1 JSON schemas, "
+        "reference data (terpenes, cannabinoids, colors), and validation tools. "
+        "Schemas are automatically synced from the official cdes-spec repository."
     ),
 )
 
@@ -85,6 +125,98 @@ def _all_schema_names() -> list[str]:
 def _all_reference_names() -> list[str]:
     """List available reference data file stems."""
     return sorted(p.stem for p in _REFERENCE_DIR.glob("*.json"))
+
+
+def sync_schemas_from_github() -> dict[str, Any]:
+    """Fetch latest schemas and reference data from upstream GitHub repos.
+
+    Pulls from Acidni-LLC/cdes-spec (schemas) and
+    Acidni-LLC/cdes-reference-data (terpene/cannabinoid libraries).
+    Downloaded files are cached in memory and persisted to disk so the
+    bundled copy stays current across container restarts.
+    """
+    global _last_sync  # noqa: PLW0603
+    errors: list[str] = []
+    schemas_updated = 0
+    refs_updated = 0
+
+    try:
+        with httpx.Client(timeout=30, follow_redirects=True) as client:
+            # -- schemas ------------------------------------------------
+            for name in _GITHUB_SCHEMA_FILES:
+                url = f"{_GITHUB_RAW_BASE}/cdes-spec/main/schemas/v1/{name}.json"
+                try:
+                    resp = client.get(url)
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        _SCHEMA_CACHE[name] = data
+                        path = _SCHEMA_DIR / f"{name}.json"
+                        path.parent.mkdir(parents=True, exist_ok=True)
+                        path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+                        schemas_updated += 1
+                    else:
+                        errors.append(f"Schema {name}: HTTP {resp.status_code}")
+                except Exception as exc:  # noqa: BLE001
+                    errors.append(f"Schema {name}: {exc}")
+
+            # -- reference data -----------------------------------------
+            for ref_name, (subdir, filename) in _GITHUB_REFERENCE_MAP.items():
+                url = f"{_GITHUB_RAW_BASE}/cdes-reference-data/main/{subdir}/{filename}"
+                try:
+                    resp = client.get(url)
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        _REFERENCE_CACHE[ref_name] = data
+                        path = _REFERENCE_DIR / f"{ref_name}.json"
+                        path.parent.mkdir(parents=True, exist_ok=True)
+                        path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+                        refs_updated += 1
+                    else:
+                        errors.append(f"Reference {ref_name}: HTTP {resp.status_code}")
+                except Exception as exc:  # noqa: BLE001
+                    errors.append(f"Reference {ref_name}: {exc}")
+    except Exception as exc:  # noqa: BLE001
+        errors.append(f"GitHub sync failed: {exc}")
+
+    _last_sync = datetime.now(timezone.utc)
+
+    summary: dict[str, Any] = {
+        "schemas_updated": schemas_updated,
+        "references_updated": refs_updated,
+        "errors": errors,
+        "synced_at": _last_sync.isoformat(),
+    }
+
+    if errors:
+        logger.warning("GitHub sync completed with errors: %s", errors)
+    else:
+        logger.info(
+            "GitHub sync complete: %d schemas, %d references",
+            schemas_updated,
+            refs_updated,
+        )
+
+    return summary
+
+
+# ---------------------------------------------------------------------------
+# Health endpoint
+# ---------------------------------------------------------------------------
+
+
+async def _health_endpoint(request: Request) -> JSONResponse:  # noqa: ARG001
+    """Health check for Azure Container Apps probes."""
+    return JSONResponse(
+        {
+            "status": "healthy",
+            "service": "cdes-mcp-server",
+            "version": __version__,
+            "transport": os.getenv("MCP_TRANSPORT", "sse"),
+            "schemas": _all_schema_names(),
+            "references": _all_reference_names(),
+            "lastSync": _last_sync.isoformat() if _last_sync else None,
+        }
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -428,7 +560,9 @@ def get_cdes_overview() -> str:
     return json.dumps(
         {
             "standard": "Cannabis Data Exchange Standard (CDES)",
-            "version": "1.0.0",
+            "specVersion": "1.0.0",
+            "serverVersion": __version__,
+            "publicEndpoint": "https://cdes-mcp.acidni.net/sse",
             "schemaVersion": "JSON Schema Draft 2020-12",
             "baseUri": "https://schemas.terprint.com/cdes/v1/",
             "website": "https://www.cdes.world",
@@ -468,9 +602,68 @@ def get_cdes_overview() -> str:
 # ---------------------------------------------------------------------------
 
 
+async def _run_sse_server(host: str, port: int) -> None:
+    """Run SSE server with /health endpoint and CORS."""
+    sse_transport = SseServerTransport("/messages/")
+
+    async def handle_sse(request: Request) -> None:
+        async with sse_transport.connect_sse(
+            request.scope,
+            request.receive,
+            request._send,  # noqa: SLF001
+        ) as (read_stream, write_stream):
+            await mcp._mcp_server.run(  # noqa: SLF001
+                read_stream,
+                write_stream,
+                mcp._mcp_server.create_initialization_options(),  # noqa: SLF001
+            )
+
+    app = Starlette(
+        routes=[
+            Route("/health", _health_endpoint),
+            Route("/sse", handle_sse),
+            Route("/messages/", sse_transport.handle_post_message, methods=["POST"]),
+        ],
+        middleware=[
+            Middleware(
+                CORSMiddleware,
+                allow_origins=["*"],
+                allow_methods=["GET", "POST"],
+                allow_headers=["*"],
+            ),
+        ],
+    )
+
+    config = uvicorn.Config(app, host=host, port=port, log_level="info")
+    server = uvicorn.Server(config)
+    await server.serve()
+
+
 def main() -> None:
-    """Run the CDES MCP server over stdio transport."""
-    mcp.run(transport="stdio")
+    """Run the CDES MCP server.
+
+    Transport is controlled by ``MCP_TRANSPORT`` env var:
+
+    * ``sse``   (default) — public SSE server with ``/health`` endpoint
+    * ``stdio`` — local stdio for MCP client development
+    """
+    transport = os.getenv("MCP_TRANSPORT", "sse")
+
+    if transport == "stdio":
+        mcp.run(transport="stdio")
+    else:
+        logging.basicConfig(level=logging.INFO)
+        logger.info("Syncing schemas from GitHub on startup...")
+        result = sync_schemas_from_github()
+        logger.info("Sync result: %s", result)
+
+        host = os.getenv("MCP_HOST", "0.0.0.0")  # noqa: S104
+        port = int(os.getenv("MCP_PORT", "8000"))
+        logger.info("Starting CDES MCP Server (SSE) on %s:%d", host, port)
+
+        import anyio
+
+        anyio.run(_run_sse_server, host, port)
 
 
 if __name__ == "__main__":

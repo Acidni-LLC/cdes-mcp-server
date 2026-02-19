@@ -13,9 +13,9 @@ from __future__ import annotations
 import json
 import logging
 import os
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import httpx
 import jsonschema
@@ -27,9 +27,11 @@ from mcp.server.sse import SseServerTransport
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
-from starlette.requests import Request
 from starlette.responses import JSONResponse
 from starlette.routing import Route
+
+if TYPE_CHECKING:
+    from starlette.requests import Request
 
 logger = logging.getLogger(__name__)
 
@@ -147,7 +149,7 @@ def sync_schemas_from_github() -> dict[str, Any]:
                 url = f"{_GITHUB_RAW_BASE}/cdes-spec/main/schemas/v1/{name}.json"
                 try:
                     resp = client.get(url)
-                    if resp.status_code == 200:
+                    if resp.is_success:
                         data = resp.json()
                         _SCHEMA_CACHE[name] = data
                         path = _SCHEMA_DIR / f"{name}.json"
@@ -164,7 +166,7 @@ def sync_schemas_from_github() -> dict[str, Any]:
                 url = f"{_GITHUB_RAW_BASE}/cdes-reference-data/main/{subdir}/{filename}"
                 try:
                     resp = client.get(url)
-                    if resp.status_code == 200:
+                    if resp.is_success:
                         data = resp.json()
                         _REFERENCE_CACHE[ref_name] = data
                         path = _REFERENCE_DIR / f"{ref_name}.json"
@@ -178,7 +180,7 @@ def sync_schemas_from_github() -> dict[str, Any]:
     except Exception as exc:  # noqa: BLE001
         errors.append(f"GitHub sync failed: {exc}")
 
-    _last_sync = datetime.now(timezone.utc)
+    _last_sync = datetime.now(tz=UTC)
 
     summary: dict[str, Any] = {
         "schemas_updated": schemas_updated,

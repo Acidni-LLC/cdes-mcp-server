@@ -564,7 +564,7 @@ def get_cdes_overview() -> str:
             "standard": "Cannabis Data Exchange Standard (CDES)",
             "specVersion": "1.0.0",
             "serverVersion": __version__,
-            "publicEndpoint": "https://cdes-mcp.acidni.net/sse",
+            "publicEndpoint": "https://mcp.cdes.world/sse",
             "schemaVersion": "JSON Schema Draft 2020-12",
             "baseUri": "https://schemas.terprint.com/cdes/v1/",
             "website": "https://www.cdes.world",

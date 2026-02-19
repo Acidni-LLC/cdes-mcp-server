@@ -18,31 +18,11 @@ The **Cannabis Data Exchange Standard** is an open-source data standard for the 
 
 ## Quick Start
 
-### Install from Source
+### Option 1: Use the Public Server (Recommended)
 
-```bash
-git clone https://github.com/Acidni-LLC/cdes-mcp-server.git
-cd cdes-mcp-server
-pip install -e .
-```
+The CDES MCP Server is hosted publicly at **https://mcp.cdes.world** — no installation needed.
 
-### Install from PyPI *(coming soon)*
-
-```bash
-pip install cdes-mcp-server
-```
-
-### Run Standalone
-
-```bash
-cdes-mcp-server
-```
-
-The server communicates over **stdio** transport (JSON-RPC 2.0).
-
-## MCP Client Configuration
-
-### Claude Desktop
+#### Claude Desktop
 
 Add to your `claude_desktop_config.json`:
 
@@ -50,14 +30,13 @@ Add to your `claude_desktop_config.json`:
 {
   "mcpServers": {
     "cdes": {
-      "command": "cdes-mcp-server",
-      "args": []
+      "url": "https://mcp.cdes.world/sse"
     }
   }
 }
 ```
 
-### VS Code (GitHub Copilot)
+#### VS Code (GitHub Copilot)
 
 Add to `.vscode/mcp.json` in your project:
 
@@ -65,20 +44,50 @@ Add to `.vscode/mcp.json` in your project:
 {
   "mcpServers": {
     "cdes": {
-      "command": "cdes-mcp-server",
-      "args": []
+      "type": "sse",
+      "url": "https://mcp.cdes.world/sse"
     }
   }
 }
 ```
 
-### Cursor / Windsurf
+#### Cursor / Windsurf
 
 ```json
 {
   "mcpServers": {
     "cdes": {
-      "command": "cdes-mcp-server"
+      "url": "https://mcp.cdes.world/sse"
+    }
+  }
+}
+```
+
+#### Health Check
+
+```bash
+curl https://mcp.cdes.world/health
+```
+
+### Option 2: Run Locally (stdio)
+
+Install from source for local/offline use:
+
+```bash
+git clone https://github.com/Acidni-LLC/cdes-mcp-server.git
+cd cdes-mcp-server
+pip install -e .
+cdes-mcp-server
+```
+
+For local stdio transport, configure your MCP client:
+
+```json
+{
+  "mcpServers": {
+    "cdes": {
+      "command": "cdes-mcp-server",
+      "args": []
     }
   }
 }

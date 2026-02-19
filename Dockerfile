@@ -24,12 +24,8 @@ RUN groupadd --gid 1000 appuser \
 
 WORKDIR /app
 
-# Install dependencies first (Docker layer caching)
+# Copy project metadata and source
 COPY pyproject.toml README.md LICENSE ./
-RUN pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir .
-
-# Copy application source
 COPY src/ ./src/
 
 # Overlay fresh schemas from upstream (overwrite bundled copies)
@@ -39,8 +35,9 @@ COPY --from=schema-sync /sync/cdes-spec/schemas/v1/ ./src/cdes_mcp_server/schema
 COPY --from=schema-sync /sync/cdes-reference-data/terpenes/ ./src/cdes_mcp_server/reference/
 COPY --from=schema-sync /sync/cdes-reference-data/cannabinoids/ ./src/cdes_mcp_server/reference/
 
-# Re-install with fresh schemas in place
-RUN pip install --no-cache-dir .
+# Install package with fresh schemas baked in
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir .
 
 # Ownership
 RUN chown -R appuser:appuser /app

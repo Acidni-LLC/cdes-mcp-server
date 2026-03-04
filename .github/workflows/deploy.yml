@@ -12,8 +12,8 @@ permissions:
   id-token: write
 
 env:
-  ACR_NAME: crterprint
-  ACR_LOGIN_SERVER: crterprint.azurecr.io
+  ACR_NAME: cracidnidev
+  ACR_LOGIN_SERVER: cracidnidev.azurecr.io
   IMAGE_NAME: cdes-mcp-server
   CONTAINER_APP: ca-cdes-mcp-server
   RESOURCE_GROUP: rg-dev-terprint-ca

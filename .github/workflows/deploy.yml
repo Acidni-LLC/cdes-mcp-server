@@ -16,7 +16,7 @@ env:
   ACR_LOGIN_SERVER: cracidnidev.azurecr.io
   IMAGE_NAME: cdes-mcp-server
   CONTAINER_APP: ca-cdes-mcp-server
-  RESOURCE_GROUP: rg-dev-terprint-ca
+  RESOURCE_GROUP: rg-dev-acidni-shared
 
 jobs:
   # ------------------------------------------------------------------

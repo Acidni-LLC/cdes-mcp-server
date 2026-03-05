@@ -8,6 +8,27 @@ Transport: SSE (public) or stdio (local dev)
 Protocol: MCP v1.0 over JSON-RPC 2.0
 """
 
+# ---------------------------------------------------------------------------
+# Application Insights / OpenTelemetry — MUST be configured before app startup
+# ---------------------------------------------------------------------------
+import os as _os
+
+_ai_conn = _os.environ.get("APPLICATIONINSIGHTS_CONNECTION_STRING")
+if _ai_conn:
+    try:
+        from azure.monitor.opentelemetry import configure_azure_monitor
+        configure_azure_monitor(
+            connection_string=_ai_conn,
+            enable_live_metrics=True,
+        )
+        print(f"[AppInsights] Telemetry configured", flush=True)
+    except Exception as _ai_err:
+        print(f"[AppInsights] Setup failed: {_ai_err}", flush=True)
+else:
+    print("[AppInsights] APPLICATIONINSIGHTS_CONNECTION_STRING not set", flush=True)
+# ---------------------------------------------------------------------------
+
+
 from __future__ import annotations
 
 import json
